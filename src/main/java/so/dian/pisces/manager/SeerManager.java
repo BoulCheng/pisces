@@ -10,7 +10,6 @@ import so.dian.pisces.config.SeerConfiguration;
 import so.dian.pisces.domain.BasicDataDTO;
 import so.dian.pisces.domain.ForecastShopDayDO;
 import so.dian.pisces.manager.task.SeerRecursiveTask;
-import so.dian.pisces.service.ForecastDataService;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -32,7 +31,7 @@ public class SeerManager {
     private static final ForkJoinPool forkJoinPool = new ForkJoinPool(6);
 
     @Autowired
-    private ForecastDataService forecastDataService;
+    private BasicDataManager basicDataManager;
 
     @Autowired
     private ForecastPastManager forecastPastManager;
@@ -52,7 +51,7 @@ public class SeerManager {
 
         List<ForecastShopDayDO> forecastDOList;
         BasicDataDTO basicDataDTO = new BasicDataDTO(orderDate, 40000);
-        Long total = forecastDataService.count(basicDataDTO);
+        Long total = basicDataManager.count(basicDataDTO);
         if (Objects.isNull(total) || total == 0) {
             // warn log
             return;
@@ -60,7 +59,7 @@ public class SeerManager {
         basicDataDTO.setPageCount(total);
 
         do {
-            forecastDOList = forecastDataService.page(basicDataDTO);
+            forecastDOList = basicDataManager.page(basicDataDTO);
             SeerRecursiveTask seerRecursiveTask = new SeerRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), seerConfiguration, forecastDOList);
             ForkJoinTask<Long> forkJoinTask = forkJoinPool.submit(seerRecursiveTask);
 

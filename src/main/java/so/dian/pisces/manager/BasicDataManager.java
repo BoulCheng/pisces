@@ -1,4 +1,4 @@
-package so.dian.pisces.service;
+package so.dian.pisces.manager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,11 +10,11 @@ import java.util.List;
 
 /**
  * @author yuanming
- * Created on 2019/10/16
+ * Created on 2019/11/4
  * Description
  */
 @Service
-public class ForecastDataService {
+public class BasicDataManager {
 
     @Autowired
     private BasicDataMapper basicDataMapper;
@@ -26,5 +26,4 @@ public class ForecastDataService {
     public Long count(BasicDataDTO basicDataDTO) {
         return basicDataMapper.count(basicDataDTO);
     }
-
 }
