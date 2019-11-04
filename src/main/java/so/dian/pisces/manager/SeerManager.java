@@ -45,7 +45,7 @@ public class SeerManager {
     }
 
     public void predict(String orderDate, SeerConfiguration.RecursiveTaskEnum recursiveTaskEnum) {
-        SeerConfiguration seerConfiguration = SeerConfiguration.newBuilder(8, forecastPastManager).build();
+        SeerConfiguration seerConfiguration = SeerConfiguration.newBuilder(8, forecastPastManager, recursiveTaskEnum).build();
         Map<String, Map<String, Object>> pmmlCategoricalValuesMap = getCategoricalValues(seerConfiguration.peekEvaluator());
         seerConfiguration.setPmmlCategoricalValuesMap(pmmlCategoricalValuesMap);
 

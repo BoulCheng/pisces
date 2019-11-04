@@ -31,6 +31,7 @@ public final class SeerConfiguration {
     private List<Evaluator> evaluatorList;
     private ArrayBlockingQueue<Evaluator> arrayBlockingQueue;
     private ForecastPastManager forecastPastManager;
+    private RecursiveTaskEnum recursiveTaskEnum;
     private Map<String, Map<String, Object>> pmmlCategoricalValuesMap;
 
     public void setPmmlCategoricalValuesMap(Map<String, Map<String, Object>> pmmlCategoricalValuesMap) {
@@ -53,7 +54,7 @@ public final class SeerConfiguration {
         Evaluator evaluator = arrayBlockingQueue.poll();
         if (evaluator == null) {
             // warn log
-            return Seer.loadPmml(FileUtil.getFileInputStream());
+            return Seer.loadPmml(FileUtil.getFileInputStream(this.recursiveTaskEnum));
         } else {
             return evaluator;
         }
@@ -63,7 +64,7 @@ public final class SeerConfiguration {
         Evaluator evaluator = arrayBlockingQueue.peek();
         if (evaluator == null) {
             // warn log
-            return Seer.loadPmml(FileUtil.getFileInputStream());
+            return Seer.loadPmml(FileUtil.getFileInputStream(this.recursiveTaskEnum));
         } else {
             return evaluator;
         }
@@ -73,16 +74,20 @@ public final class SeerConfiguration {
         return this.forecastPastManager;
     }
 
+    public RecursiveTaskEnum getRecursiveTaskEnum() {
+        return this.recursiveTaskEnum;
+    }
+
     public boolean refresh() {
         this.arrayBlockingQueue = new ArrayBlockingQueue<>(this.evaluatorCount, false, this.evaluatorList);
         return true;
     }
 
-    public static SeerConfiguration.Builder newBuilder(ForecastPastManager forecastPastManager) {
-        return newBuilder(DEFAULT_EVALUATOR_COUNT, forecastPastManager);
+    public static SeerConfiguration.Builder newBuilder(ForecastPastManager forecastPastManager, RecursiveTaskEnum recursiveTaskEnum) {
+        return newBuilder(DEFAULT_EVALUATOR_COUNT, forecastPastManager, recursiveTaskEnum);
     }
 
-    public static SeerConfiguration.Builder newBuilder(Integer evaluatorCount, ForecastPastManager forecastPastManager) {
+    public static SeerConfiguration.Builder newBuilder(Integer evaluatorCount, ForecastPastManager forecastPastManager, RecursiveTaskEnum recursiveTaskEnum) {
         if (Objects.isNull(evaluatorCount)) {
             throw new IllegalArgumentException("evaluatorCount can not be empty.");
         }
@@ -91,15 +96,20 @@ public final class SeerConfiguration {
             throw new IllegalArgumentException("forecastPastManager can not be empty.");
         }
 
-        return new SeerConfiguration.Builder(evaluatorCount, forecastPastManager);
+        if (Objects.isNull(recursiveTaskEnum)) {
+            throw new IllegalArgumentException("recursiveTaskEnum can not be empty.");
+        }
+
+        return new SeerConfiguration.Builder(evaluatorCount, forecastPastManager, recursiveTaskEnum);
     }
 
-    private SeerConfiguration(Integer evaluatorCount, Integer recursiveDepth, List<Evaluator> evaluatorList, ArrayBlockingQueue<Evaluator> arrayBlockingQueue, ForecastPastManager forecastPastManager) {
+    private SeerConfiguration(Integer evaluatorCount, Integer recursiveDepth, List<Evaluator> evaluatorList, ArrayBlockingQueue<Evaluator> arrayBlockingQueue, ForecastPastManager forecastPastManager, RecursiveTaskEnum recursiveTaskEnum) {
         this.evaluatorCount = evaluatorCount;
         this.recursiveDepth = recursiveDepth;
         this.evaluatorList = evaluatorList;
         this.arrayBlockingQueue = arrayBlockingQueue;
         this.forecastPastManager = forecastPastManager;
+        this.recursiveTaskEnum = recursiveTaskEnum;
     }
 
     public static class Builder {
@@ -109,6 +119,7 @@ public final class SeerConfiguration {
         private List<Evaluator> evaluatorList;
         private ArrayBlockingQueue<Evaluator> arrayBlockingQueue;
         private ForecastPastManager forecastPastManager;
+        private RecursiveTaskEnum recursiveTaskEnum;
 
         public SeerConfiguration.Builder evaluatorCount(Integer evaluatorCount) {
             this.evaluatorCount = evaluatorCount;
@@ -122,14 +133,14 @@ public final class SeerConfiguration {
             this.arrayBlockingQueue = new ArrayBlockingQueue<>(this.evaluatorCount);
 
             for (int i = 0; i < this.evaluatorCount; i++) {
-                this.evaluatorList.add(Seer.loadPmml(FileUtil.getFileInputStream()));
+                this.evaluatorList.add(Seer.loadPmml(FileUtil.getFileInputStream(this.recursiveTaskEnum)));
             }
 
             for (Evaluator evaluator : this.evaluatorList) {
                 this.arrayBlockingQueue.offer(evaluator);
             }
 
-            return new SeerConfiguration(this.evaluatorCount, this.recursiveDepth, this.evaluatorList, this.arrayBlockingQueue, this.forecastPastManager);
+            return new SeerConfiguration(this.evaluatorCount, this.recursiveDepth, this.evaluatorList, this.arrayBlockingQueue, this.forecastPastManager, this.recursiveTaskEnum);
         }
 
         /**
@@ -163,12 +174,13 @@ public final class SeerConfiguration {
             return (n < 0) ? 1 : (n >= MAXIMUM_EVALUATOR_COUNT) ? MAXIMUM_EVALUATOR_COUNT : n + 1;
         }
 
-        private Builder(Integer evaluatorCount, ForecastPastManager forecastPastManager) {
+        private Builder(Integer evaluatorCount, ForecastPastManager forecastPastManager, RecursiveTaskEnum recursiveTaskEnum) {
             this.evaluatorCount = evaluatorCount;
             this.recursiveDepth = null;
             this.evaluatorList = null;
             this.arrayBlockingQueue = null;
             this.forecastPastManager = forecastPastManager;
+            this.recursiveTaskEnum = recursiveTaskEnum;
         }
     }
 
