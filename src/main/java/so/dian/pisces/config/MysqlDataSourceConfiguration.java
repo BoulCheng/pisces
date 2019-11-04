@@ -34,7 +34,7 @@ public class MysqlDataSourceConfiguration {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         bean.setMapperLocations(
-                new PathMatchingResourcePatternResolver().getResources("classpath:so/dian/pisces/mapper/*.xml"));
+                new PathMatchingResourcePatternResolver().getResources("classpath:so/dian/pisces/dao/mapper/*.xml"));
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         configuration.setUseGeneratedKeys(true);
         configuration.setUseColumnLabel(true);
