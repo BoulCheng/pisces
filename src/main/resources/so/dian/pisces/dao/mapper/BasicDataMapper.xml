@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="so.dian.pisces.dao.mapper.BasicDataMapper">
+  <resultMap id="BaseResultMap" type="so.dian.pisces.domain.ForecastShopDayDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="shop_id" jdbcType="INTEGER" property="shop_id" />
+    <result column="poi_longitude" jdbcType="DOUBLE" property="poi_longitude" />
+    <result column="poi_latitude" jdbcType="DOUBLE" property="poi_latitude" />
+    <result column="district" jdbcType="VARCHAR" property="district" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city_name" jdbcType="VARCHAR" property="city_name" />
+    <result column="parent_type_name" jdbcType="VARCHAR" property="parent_type_name" />
+    <result column="type_name" jdbcType="VARCHAR" property="type_name" />
+    <result column="box_price" jdbcType="NUMERIC" property="box_price" />
+    <result column="shop_level" jdbcType="VARCHAR" property="shop_level" />
+    <result column="total_online_time" jdbcType="INTEGER" property="total_online_time" />
+    <result column="device_num" jdbcType="INTEGER" property="device_num" />
+    <result column="total_slot_num" jdbcType="INTEGER" property="total_slot_num" />
+    <result column="powerbank_num" jdbcType="INTEGER" property="powerbank_num" />
+    <result column="pay_orders" jdbcType="INTEGER" property="pay_orders" />
+    <result column="zero_orders" jdbcType="INTEGER" property="zero_orders" />
+    <result column="ninety_orders" jdbcType="INTEGER" property="ninety_orders" />
+    <result column="payment_amount" jdbcType="REAL" property="payment_amount" />
+    <result column="refund_pay_amount" jdbcType="REAL" property="refund_pay_amount" />
+    <result column="avg_price" jdbcType="NUMERIC" property="avg_price" />
+    <result column="is_billing" jdbcType="INTEGER" property="is_billing" />
+    <result column="is_entrance_fee" jdbcType="INTEGER" property="is_entrance_fee" />
+    <result column="scan_num" jdbcType="INTEGER" property="scan_num" />
+    <result column="is_new_sign_shop" jdbcType="INTEGER" property="is_new_sign_shop" />
+    <result column="is_direct_sales" jdbcType="INTEGER" property="is_direct_sales" />
+    <result column="is_competitor" jdbcType="INTEGER" property="is_competitor" />
+    <result column="is_competitor_ycb" jdbcType="INTEGER" property="is_competitor_ycb" />
+    <result column="is_competitor_gs" jdbcType="INTEGER" property="is_competitor_gs" />
+    <result column="is_competitor_ld" jdbcType="INTEGER" property="is_competitor_ld" />
+    <result column="is_competitor_jd" jdbcType="INTEGER" property="is_competitor_jd" />
+    <result column="competitor_cnt" jdbcType="INTEGER" property="competitor_cnt" />
+    <result column="is_mall" jdbcType="INTEGER" property="is_mall" />
+    <result column="is_scenic_area" jdbcType="INTEGER" property="is_scenic_area" />
+    <result column="weather_type" jdbcType="VARCHAR" property="weather_type" />
+    <result column="lowest_temperature" jdbcType="INTEGER" property="lowest_temperature" />
+    <result column="highest_temperature" jdbcType="INTEGER" property="highest_temperature" />
+    <result column="date_type" jdbcType="INTEGER" property="date_type" />
+    <result column="weekday" jdbcType="INTEGER" property="weekday" />
+    <result column="weekofyear" jdbcType="INTEGER" property="weekofyear" />
+    <result column="monthofyear" jdbcType="INTEGER" property="monthofyear" />
+    <result column="ln_orders" jdbcType="DOUBLE" property="ln_orders" />
+    <result column="ln_amount" jdbcType="DOUBLE" property="ln_amount" />
+    <result column="biz_date" jdbcType="VARCHAR" property="biz_date" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, shop_id, poi_longitude, poi_latitude, district, province, city_name, parent_type_name,
+    type_name, box_price, shop_level, total_online_time, device_num, total_slot_num,
+    powerbank_num, pay_orders, zero_orders, ninety_orders, payment_amount, refund_pay_amount,
+    avg_price, is_billing, is_entrance_fee, scan_num, is_new_sign_shop, is_direct_sales,
+    is_competitor, is_competitor_ycb, is_competitor_gs, is_competitor_ld, is_competitor_jd,
+    competitor_cnt, is_mall, is_scenic_area, weather_type, lowest_temperature, highest_temperature,
+    date_type, weekday, weekofyear, monthofyear, ln_orders, ln_amount, biz_date
+  </sql>
+
+  <select id="page" parameterType="so.dian.pisces.domain.BasicDataDTO" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from dwa_forecast_shop_d d
+    WHERE
+    biz_date = #{orderDate}
+    ORDER BY
+    id asc
+    LIMIT #{pageSize} OFFSET #{offset};
+  </select>
+
+  <select id="count" parameterType="so.dian.pisces.domain.BasicDataDTO" resultType="long">
+    select
+    count(*)
+    from dwa_forecast_shop_d d
+    WHERE
+    biz_date = #{orderDate}
+  </select>
+</mapper>

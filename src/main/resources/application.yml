@@ -1,0 +1,37 @@
+## RDBMS
+#druid:
+#  datasource:
+#    mysql:
+#      url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&autoReconnect=true
+#      username: root
+#      password: yuanming
+#      driver-class-name: com.mysql.jdbc.Driver
+#      initial-size: 50
+#      min-idle: 10
+#      max-active: 100
+#      max-wait: 60000
+#      testOnBorrow: false
+#      testOnReturn: false
+#      testWhileIdle: true
+#      timeBetweenEvictionRunsMillis: 60000
+#      validationQuery: SELECT 1 FROM DUAL
+#      filters: 'stat,wall,slf4j'
+
+druid:
+  datasource:
+    mysql:
+      url: jdbc:postgresql://pg-dev.dian.so:5432/dx2
+      #      url: jdbc:postgresql://dx2-real-pg.dian.so:1921/dx2
+      username: dx2
+      password: helloword
+      driver-class-name: org.postgresql.Driver
+      initial-size: 1
+      min-idle: 5
+      max-active: 5
+      max-wait: 60000
+      testOnBorrow: false
+      testOnReturn: false
+      testWhileIdle: true
+      timeBetweenEvictionRunsMillis: 60000
+      validationQuery: SELECT 1
+      filters: 'stat,wall,slf4j'
