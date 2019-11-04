@@ -15,91 +15,71 @@ import java.util.concurrent.RecursiveTask;
  * Created on 2019/10/23
  * Description
  */
-public class SeerAmountRecursiveTask extends RecursiveTask<Long> {
-
-    private int currDepth;
-    private int begin;
-    private int end;
-    private SeerConfiguration seerConfiguration;
-    private List<ForecastShopDayDO> forecastDOList;
+public class SeerAmountRecursiveTask extends AbstractSeerRecursiveTask {
 
     public SeerAmountRecursiveTask(int currDepth, int begin, int end, SeerConfiguration seerConfiguration, List<ForecastShopDayDO> forecastDOList) {
-        this.currDepth = currDepth;
-        this.begin = begin;
-        this.end = end;
-        this.seerConfiguration = seerConfiguration;
-        this.forecastDOList = forecastDOList;
+        super(currDepth, begin, end, seerConfiguration, forecastDOList);
     }
 
     @Override
-    protected Long compute() {
-        if (this.currDepth == seerConfiguration.getRecursiveDepth()) {
-            Evaluator evaluator = seerConfiguration.getNextEvaluator();
-            ForecastPastAmountDO forecastPastAmountDO;
-            ForecastShopDayDO forecastDO;
-            List<ForecastPastAmountDO> forecastPastAmountDOList = new ArrayList<>(3005);
-            Date date = new Date();
-            for (int i = this.begin; i < this.end; i++) {
-                forecastDO = this.forecastDOList.get(i);
-                Field[] fields = forecastDO.getClass().getDeclaredFields();
-                Map<String, Object> map = new ConcurrentHashMap<>();
-                try {
-                    for (Field field : fields) {
-                        field.setAccessible(true);
-                        if (field.get(forecastDO) != null) {
-                            map.put(field.getName(), field.get(forecastDO));
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                forecastPastAmountDO = new ForecastPastAmountDO();
-                forecastPastAmountDO.setSource_id(forecastDO.getId());
-                forecastPastAmountDO.setShop_id(forecastDO.getShop_id());
-                forecastPastAmountDO.setPayment_amount_original(forecastDO.getPayment_amount());
-                forecastPastAmountDO.setBiz_date(forecastDO.getBiz_date());
-                forecastPastAmountDO.setCreate_time(date);
-
-                boolean flag = true;
-                EnumMap<Seer.SeerReturnEnum, Object> result;
-                try {
-                    result = Seer.predict(evaluator, map, seerConfiguration);
-                    forecastPastAmountDO.setPayment_amount_forecast(Math.expm1((Double) result.get(Seer.SeerReturnEnum.RESULT)));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    flag = false;
-                }
-
-                if (!flag) {
-                    forecastPastAmountDO.setStatus(1);
-                } else {
-                    forecastPastAmountDO.setStatus(0);
-                }
-                forecastPastAmountDOList.add(forecastPastAmountDO);
-                if (forecastPastAmountDOList.size() > 3000 || (this.end - 1 == i)) {
-                    try {
-                        this.seerConfiguration.getForecastPastManager().batchInsertForPaymentAmount(forecastPastAmountDOList);
-                        forecastPastAmountDOList.clear();
-                    } catch (Exception e) {
-                        // log
-                        e.printStackTrace();
+    protected void execute() {
+        Evaluator evaluator = seerConfiguration.getNextEvaluator();
+        ForecastPastAmountDO forecastPastAmountDO;
+        ForecastShopDayDO forecastDO;
+        List<ForecastPastAmountDO> forecastPastAmountDOList = new ArrayList<>(3005);
+        Date date = new Date();
+        for (int i = this.begin; i < this.end; i++) {
+            forecastDO = this.forecastDOList.get(i);
+            Field[] fields = forecastDO.getClass().getDeclaredFields();
+            Map<String, Object> map = new ConcurrentHashMap<>();
+            try {
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    if (field.get(forecastDO) != null) {
+                        map.put(field.getName(), field.get(forecastDO));
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-        } else {
-            int middle = (begin + end) / 2;
-            currDepth++;
-            SeerAmountRecursiveTask seerRecursiveTask = new SeerAmountRecursiveTask(currDepth, begin, middle, seerConfiguration, forecastDOList);
-            SeerAmountRecursiveTask seerRecursiveTask2 = new SeerAmountRecursiveTask(currDepth, middle, end, seerConfiguration, forecastDOList);
+            forecastPastAmountDO = new ForecastPastAmountDO();
+            forecastPastAmountDO.setSource_id(forecastDO.getId());
+            forecastPastAmountDO.setShop_id(forecastDO.getShop_id());
+            forecastPastAmountDO.setPayment_amount_original(forecastDO.getPayment_amount());
+            forecastPastAmountDO.setBiz_date(forecastDO.getBiz_date());
+            forecastPastAmountDO.setCreate_time(date);
 
-            seerRecursiveTask.fork();
-            seerRecursiveTask.join();
+            boolean flag = true;
+            EnumMap<Seer.SeerReturnEnum, Object> result;
+            try {
+                result = Seer.predict(evaluator, map, seerConfiguration);
+                forecastPastAmountDO.setPayment_amount_forecast(Math.expm1((Double) result.get(Seer.SeerReturnEnum.RESULT)));
+            } catch (Exception e) {
+                e.printStackTrace();
+                flag = false;
+            }
 
-            seerRecursiveTask2.fork();
-            seerRecursiveTask2.join();
+            if (!flag) {
+                forecastPastAmountDO.setStatus(1);
+            } else {
+                forecastPastAmountDO.setStatus(0);
+            }
+            forecastPastAmountDOList.add(forecastPastAmountDO);
+            if (forecastPastAmountDOList.size() > 3000 || (this.end - 1 == i)) {
+                try {
+                    this.seerConfiguration.getForecastPastManager().batchInsertForPaymentAmount(forecastPastAmountDOList);
+                    forecastPastAmountDOList.clear();
+                } catch (Exception e) {
+                    // log
+                    e.printStackTrace();
+                }
+            }
         }
-        return null;
+    }
+
+    @Override
+    protected RecursiveTask newRecursiveTask(int currDepth, int begin, int end, SeerConfiguration seerConfiguration, List<ForecastShopDayDO> forecastDOList) {
+        return new SeerAmountRecursiveTask(currDepth, begin, end, seerConfiguration, forecastDOList);
     }
 }
