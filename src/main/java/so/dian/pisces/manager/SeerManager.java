@@ -51,7 +51,7 @@ public class SeerManager {
 
         List<ForecastShopDayDO> forecastDOList;
         BasicDataDTO basicDataDTO = new BasicDataDTO(orderDate, 40000);
-        Long total = basicDataManager.count(basicDataDTO);
+        Long total = basicDataManager.count(basicDataDTO, recursiveTaskEnum);
         if (Objects.isNull(total) || total == 0) {
             // warn log
             return;
@@ -59,7 +59,7 @@ public class SeerManager {
         basicDataDTO.setPageCount(total);
 
         do {
-            forecastDOList = basicDataManager.page(basicDataDTO);
+            forecastDOList = basicDataManager.page(basicDataDTO, recursiveTaskEnum);
 //            SeerRecursiveTask seerRecursiveTask = new SeerRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), seerConfiguration, forecastDOList);
             ForkJoinTask<Long> forkJoinTask = forkJoinPool.submit(seerConfiguration.initRecursiveTask(recursiveTaskEnum, forecastDOList));
 

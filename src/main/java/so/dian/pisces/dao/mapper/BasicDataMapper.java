@@ -16,6 +16,10 @@ public interface BasicDataMapper {
     List<ForecastShopDayDO> page(BasicDataDTO basicDataDTO);
 
     Long count(BasicDataDTO basicDataDTO);
+
+    List<ForecastShopDayDO> pageFuture(BasicDataDTO basicDataDTO);
+
+    Long countFuture(BasicDataDTO basicDataDTO);
 }
 
 

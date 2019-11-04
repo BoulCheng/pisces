@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="so.dian.pisces.dao.mapper.ForecastFutureAmountMapper">
+  <resultMap id="BaseResultMap" type="so.dian.pisces.domain.ForecastFutureAmountDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="source_id" jdbcType="INTEGER" property="source_id" />
+    <result column="shop_id" jdbcType="INTEGER" property="shop_id" />
+    <result column="biz_date" jdbcType="VARCHAR" property="biz_date" />
+    <result column="payment_amount_forecast" jdbcType="DOUBLE" property="payment_amount_forecast" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="create_time" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, source_id, shop_id, biz_date, payment_amount_forecast, status, create_time
+  </sql>
+  <select id="selectByExample" parameterType="so.dian.pisces.domain.ForecastFutureAmountDOExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from forecast_future_amount
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from forecast_future_amount
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from forecast_future_amount
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="so.dian.pisces.domain.ForecastFutureAmountDOExample">
+    delete from forecast_future_amount
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+
+  <insert id="batchInsert">
+    insert into forecast_future_amount (source_id, shop_id,
+    biz_date, payment_amount_forecast,
+    status, create_time)
+    values
+    <foreach collection="items" item="item" separator=",">
+      (#{item.source_id,jdbcType=INTEGER}, #{item.shop_id,jdbcType=INTEGER},
+      #{item.biz_date,jdbcType=VARCHAR}, #{item.payment_amount_forecast,jdbcType=DOUBLE},
+      #{item.status,jdbcType=INTEGER}, #{item.create_time,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+
+  <insert id="insert" parameterType="so.dian.pisces.domain.ForecastFutureAmountDO">
+    insert into forecast_future_amount (id, source_id, shop_id, 
+      biz_date, payment_amount_forecast, status, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{source_id,jdbcType=INTEGER}, #{shop_id,jdbcType=INTEGER}, 
+      #{biz_date,jdbcType=VARCHAR}, #{payment_amount_forecast,jdbcType=DOUBLE}, #{status,jdbcType=INTEGER}, 
+      #{create_time,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="so.dian.pisces.domain.ForecastFutureAmountDO">
+    insert into forecast_future_amount
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="source_id != null">
+        source_id,
+      </if>
+      <if test="shop_id != null">
+        shop_id,
+      </if>
+      <if test="biz_date != null">
+        biz_date,
+      </if>
+      <if test="payment_amount_forecast != null">
+        payment_amount_forecast,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="source_id != null">
+        #{source_id,jdbcType=INTEGER},
+      </if>
+      <if test="shop_id != null">
+        #{shop_id,jdbcType=INTEGER},
+      </if>
+      <if test="biz_date != null">
+        #{biz_date,jdbcType=VARCHAR},
+      </if>
+      <if test="payment_amount_forecast != null">
+        #{payment_amount_forecast,jdbcType=DOUBLE},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="so.dian.pisces.domain.ForecastFutureAmountDOExample" resultType="java.lang.Long">
+    select count(*) from forecast_future_amount
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update forecast_future_amount
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.source_id != null">
+        source_id = #{record.source_id,jdbcType=INTEGER},
+      </if>
+      <if test="record.shop_id != null">
+        shop_id = #{record.shop_id,jdbcType=INTEGER},
+      </if>
+      <if test="record.biz_date != null">
+        biz_date = #{record.biz_date,jdbcType=VARCHAR},
+      </if>
+      <if test="record.payment_amount_forecast != null">
+        payment_amount_forecast = #{record.payment_amount_forecast,jdbcType=DOUBLE},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.create_time != null">
+        create_time = #{record.create_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update forecast_future_amount
+    set id = #{record.id,jdbcType=INTEGER},
+      source_id = #{record.source_id,jdbcType=INTEGER},
+      shop_id = #{record.shop_id,jdbcType=INTEGER},
+      biz_date = #{record.biz_date,jdbcType=VARCHAR},
+      payment_amount_forecast = #{record.payment_amount_forecast,jdbcType=DOUBLE},
+      status = #{record.status,jdbcType=INTEGER},
+      create_time = #{record.create_time,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="so.dian.pisces.domain.ForecastFutureAmountDO">
+    update forecast_future_amount
+    <set>
+      <if test="source_id != null">
+        source_id = #{source_id,jdbcType=INTEGER},
+      </if>
+      <if test="shop_id != null">
+        shop_id = #{shop_id,jdbcType=INTEGER},
+      </if>
+      <if test="biz_date != null">
+        biz_date = #{biz_date,jdbcType=VARCHAR},
+      </if>
+      <if test="payment_amount_forecast != null">
+        payment_amount_forecast = #{payment_amount_forecast,jdbcType=DOUBLE},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="create_time != null">
+        create_time = #{create_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="so.dian.pisces.domain.ForecastFutureAmountDO">
+    update forecast_future_amount
+    set source_id = #{source_id,jdbcType=INTEGER},
+      shop_id = #{shop_id,jdbcType=INTEGER},
+      biz_date = #{biz_date,jdbcType=VARCHAR},
+      payment_amount_forecast = #{payment_amount_forecast,jdbcType=DOUBLE},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{create_time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

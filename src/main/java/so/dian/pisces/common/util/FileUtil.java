@@ -14,9 +14,9 @@ public class FileUtil {
     public static InputStream getFileInputStream(SeerConfiguration.RecursiveTaskEnum recursiveTaskEnum){
         InputStream inputStream = null;
         try {
-            if (SeerConfiguration.RecursiveTaskEnum.ORDER.equals(recursiveTaskEnum)) {
+            if (recursiveTaskEnum.isOrder()) {
                 inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("lightgbm_1028_country_orders_online_2500_64.pmml");
-            } else if (SeerConfiguration.RecursiveTaskEnum.AMOUNT.equals(recursiveTaskEnum)) {
+            } else if (recursiveTaskEnum.isAmount()) {
                 inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("lightgbm_1028_country_amount_online_2500_64.pmml");
             }
 //            inputStream = new FileInputStream("/Users/apple/Documents/xd/lightgbm_1028_country_orders_online_2500.pmml");

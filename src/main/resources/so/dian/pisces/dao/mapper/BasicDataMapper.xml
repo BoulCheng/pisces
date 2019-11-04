@@ -76,4 +76,24 @@
     WHERE
     biz_date = #{orderDate}
   </select>
+
+
+  <select id="pageFuture" parameterType="so.dian.pisces.domain.BasicDataDTO" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from dwa_forecast_tom_shop_d
+    WHERE
+    biz_date = #{orderDate}
+    ORDER BY
+    id asc
+    LIMIT #{pageSize} OFFSET #{offset};
+  </select>
+
+  <select id="countFuture" parameterType="so.dian.pisces.domain.BasicDataDTO" resultType="long">
+    select
+    count(*)
+    from dwa_forecast_tom_shop_d
+    WHERE
+    biz_date = #{orderDate}
+  </select>
 </mapper>

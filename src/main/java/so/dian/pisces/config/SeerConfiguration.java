@@ -5,6 +5,7 @@ import so.dian.pisces.common.seer.Seer;
 import so.dian.pisces.common.util.FileUtil;
 import so.dian.pisces.domain.ForecastShopDayDO;
 import so.dian.pisces.manager.ForecastPastManager;
+import so.dian.pisces.manager.task.ForecastFutureAmountRecursiveTask;
 import so.dian.pisces.manager.task.SeerAmountRecursiveTask;
 import so.dian.pisces.manager.task.SeerRecursiveTask;
 
@@ -193,6 +194,44 @@ public final class SeerConfiguration {
          * 支付金额任务
          */
         AMOUNT,
+
+        /**
+         * 预测未来订单任务
+         */
+        FUTURE_ORDER,
+
+        /**
+         * 预测未来支付金额任务
+         */
+        FUTURE_AMOUNT;
+
+        public boolean isPast() {
+            if (ORDER.equals(this) || AMOUNT.equals(this)) {
+                return true;
+            }
+            return false;
+        }
+
+        public boolean isFuture() {
+            if (FUTURE_ORDER.equals(this) || FUTURE_AMOUNT.equals(this)) {
+                return true;
+            }
+            return false;
+        }
+
+        public boolean isOrder() {
+            if (ORDER.equals(this) || FUTURE_ORDER.equals(this)) {
+                return true;
+            }
+            return false;
+        }
+
+        public boolean isAmount() {
+            if (AMOUNT.equals(this) || FUTURE_AMOUNT.equals(this)) {
+                return true;
+            }
+            return false;
+        }
     }
 
     public RecursiveTask<Long> initRecursiveTask(RecursiveTaskEnum recursiveTaskEnum, List<ForecastShopDayDO> forecastDOList) {
@@ -200,6 +239,10 @@ public final class SeerConfiguration {
             return new SeerRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), this, forecastDOList);
         } else if (RecursiveTaskEnum.AMOUNT.equals(recursiveTaskEnum)) {
             return new SeerAmountRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), this, forecastDOList);
+        } else if (RecursiveTaskEnum.FUTURE_ORDER.equals(recursiveTaskEnum)) {
+
+        } else if (RecursiveTaskEnum.FUTURE_AMOUNT.equals(recursiveTaskEnum)) {
+            return new ForecastFutureAmountRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), this, forecastDOList);
         }
         return null;
     }
