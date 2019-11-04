@@ -3,13 +3,17 @@ package so.dian.pisces.config;
 import org.jpmml.evaluator.Evaluator;
 import so.dian.pisces.common.seer.Seer;
 import so.dian.pisces.common.util.FileUtil;
+import so.dian.pisces.domain.ForecastShopDayDO;
 import so.dian.pisces.manager.ForecastPastManager;
+import so.dian.pisces.manager.task.SeerAmountRecursiveTask;
+import so.dian.pisces.manager.task.SeerRecursiveTask;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.RecursiveTask;
 
 /**
  * @author yuanming
@@ -166,5 +170,25 @@ public final class SeerConfiguration {
             this.arrayBlockingQueue = null;
             this.forecastPastManager = forecastPastManager;
         }
+    }
+
+    public enum RecursiveTaskEnum {
+        /**
+         * 订单任务
+         */
+        ORDER,
+        /**
+         * 支付金额任务
+         */
+        AMOUNT,
+    }
+
+    public RecursiveTask<Long> initRecursiveTask(RecursiveTaskEnum recursiveTaskEnum, List<ForecastShopDayDO> forecastDOList) {
+        if (RecursiveTaskEnum.ORDER.equals(recursiveTaskEnum)) {
+            return new SeerRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), this, forecastDOList);
+        } else if (RecursiveTaskEnum.AMOUNT.equals(recursiveTaskEnum)) {
+            return new SeerAmountRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), this, forecastDOList);
+        }
+        return null;
     }
 }

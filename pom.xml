@@ -125,8 +125,6 @@
 				<dependencies>
 					<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java 配置这个依赖主要是为了等下在配置MG的时候可以不用配置classPathEntry这样的一个属性，避免
                         代码的耦合度太高 -->
-					<!--					注意Connector/J version 和 mysql server 的版本匹配: https://dev.mysql.com/doc/connector-j/5.1/en/connector-j-versions.html -->
-					<!--					该示例mysql server version 8.0.17-->
 					<dependency>
 						<groupId>mysql</groupId>
 						<artifactId>mysql-connector-java</artifactId>

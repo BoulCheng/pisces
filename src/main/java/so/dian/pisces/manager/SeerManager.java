@@ -39,12 +39,12 @@ public class SeerManager {
     public void predict() {
         LocalDate localDate = LocalDate.now();
         String date = LocalDateUtils.minusDays(localDate, 1);
-        predict(date);
+        predict(date, SeerConfiguration.RecursiveTaskEnum.AMOUNT);
         date = LocalDateUtils.plusDays(localDate, 7);
-        predict(date);
+        predict(date, SeerConfiguration.RecursiveTaskEnum.AMOUNT);
     }
 
-    public void predict(String orderDate) {
+    public void predict(String orderDate, SeerConfiguration.RecursiveTaskEnum recursiveTaskEnum) {
         SeerConfiguration seerConfiguration = SeerConfiguration.newBuilder(8, forecastPastManager).build();
         Map<String, Map<String, Object>> pmmlCategoricalValuesMap = getCategoricalValues(seerConfiguration.peekEvaluator());
         seerConfiguration.setPmmlCategoricalValuesMap(pmmlCategoricalValuesMap);
@@ -60,8 +60,8 @@ public class SeerManager {
 
         do {
             forecastDOList = basicDataManager.page(basicDataDTO);
-            SeerRecursiveTask seerRecursiveTask = new SeerRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), seerConfiguration, forecastDOList);
-            ForkJoinTask<Long> forkJoinTask = forkJoinPool.submit(seerRecursiveTask);
+//            SeerRecursiveTask seerRecursiveTask = new SeerRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), seerConfiguration, forecastDOList);
+            ForkJoinTask<Long> forkJoinTask = forkJoinPool.submit(seerConfiguration.initRecursiveTask(recursiveTaskEnum, forecastDOList));
 
             if (forkJoinTask.isCompletedAbnormally()) {
                 System.out.println(forkJoinTask.getException());
