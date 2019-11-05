@@ -58,7 +58,7 @@
     date_type, weekday, weekofyear, monthofyear, ln_orders, ln_amount, biz_date
   </sql>
 
-  <select id="page" parameterType="so.dian.pisces.domain.BasicDataDTO" resultMap="BaseResultMap">
+  <select id="pagePast" parameterType="so.dian.pisces.domain.BasicDataDTO" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from dwa_forecast_shop_d d
@@ -69,7 +69,7 @@
     LIMIT #{pageSize} OFFSET #{offset};
   </select>
 
-  <select id="count" parameterType="so.dian.pisces.domain.BasicDataDTO" resultType="long">
+  <select id="countPast" parameterType="so.dian.pisces.domain.BasicDataDTO" resultType="long">
     select
     count(*)
     from dwa_forecast_shop_d d

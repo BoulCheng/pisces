@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="so.dian.pisces.dao.mapper.ForecastPastMapper">
-  <resultMap id="BaseResultMap" type="so.dian.pisces.domain.ForecastPastDO">
+<mapper namespace="so.dian.pisces.dao.mapper.ForecastPastOrderMapper">
+  <resultMap id="BaseResultMap" type="so.dian.pisces.domain.ForecastPastOrderDO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="source_id" jdbcType="INTEGER" property="source_id" />
     <result column="shop_id" jdbcType="INTEGER" property="shop_id" />
     <result column="biz_date" jdbcType="VARCHAR" property="biz_date" />
     <result column="pay_orders_original" jdbcType="INTEGER" property="pay_orders_original" />
     <result column="pay_orders_forecast" jdbcType="DOUBLE" property="pay_orders_forecast" />
-    <result column="statu" jdbcType="INTEGER" property="statu" />
+    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="create_time" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -70,16 +70,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, source_id, shop_id, biz_date, pay_orders_original, pay_orders_forecast, statu, 
+    id, source_id, shop_id, biz_date, pay_orders_original, pay_orders_forecast, status, 
     create_time
   </sql>
-  <select id="selectByExample" parameterType="so.dian.pisces.domain.ForecastPastDOExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="so.dian.pisces.domain.ForecastPastOrderDOExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from forecast_past
+    from forecast_past_order
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -90,22 +90,22 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from forecast_past
+    from forecast_past_order
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from forecast_past
+    delete from forecast_past_order
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="so.dian.pisces.domain.ForecastPastDOExample">
-    delete from forecast_past
+  <delete id="deleteByExample" parameterType="so.dian.pisces.domain.ForecastPastOrderDOExample">
+    delete from forecast_past_order
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
 
   <insert id="batchInsert">
-    insert into forecast_past (source_id, shop_id,
+    insert into forecast_past_order (source_id, shop_id,
     biz_date, pay_orders_original, pay_orders_forecast,
     statu, create_time)
     values
@@ -116,16 +116,16 @@
     </foreach>
   </insert>
 
-  <insert id="insert" parameterType="so.dian.pisces.domain.ForecastPastDO">
-    insert into forecast_past (id, source_id, shop_id, 
+  <insert id="insert" parameterType="so.dian.pisces.domain.ForecastPastOrderDO">
+    insert into forecast_past_order (id, source_id, shop_id, 
       biz_date, pay_orders_original, pay_orders_forecast, 
-      statu, create_time)
+      status, create_time)
     values (#{id,jdbcType=INTEGER}, #{source_id,jdbcType=INTEGER}, #{shop_id,jdbcType=INTEGER}, 
       #{biz_date,jdbcType=VARCHAR}, #{pay_orders_original,jdbcType=INTEGER}, #{pay_orders_forecast,jdbcType=DOUBLE}, 
-      #{statu,jdbcType=INTEGER}, #{create_time,jdbcType=TIMESTAMP})
+      #{status,jdbcType=INTEGER}, #{create_time,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="so.dian.pisces.domain.ForecastPastDO">
-    insert into forecast_past
+  <insert id="insertSelective" parameterType="so.dian.pisces.domain.ForecastPastOrderDO">
+    insert into forecast_past_order
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -145,8 +145,8 @@
       <if test="pay_orders_forecast != null">
         pay_orders_forecast,
       </if>
-      <if test="statu != null">
-        statu,
+      <if test="status != null">
+        status,
       </if>
       <if test="create_time != null">
         create_time,
@@ -171,22 +171,22 @@
       <if test="pay_orders_forecast != null">
         #{pay_orders_forecast,jdbcType=DOUBLE},
       </if>
-      <if test="statu != null">
-        #{statu,jdbcType=INTEGER},
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="create_time != null">
         #{create_time,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="so.dian.pisces.domain.ForecastPastDOExample" resultType="java.lang.Long">
-    select count(*) from forecast_past
+  <select id="countByExample" parameterType="so.dian.pisces.domain.ForecastPastOrderDOExample" resultType="java.lang.Long">
+    select count(*) from forecast_past_order
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update forecast_past
+    update forecast_past_order
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
@@ -206,8 +206,8 @@
       <if test="record.pay_orders_forecast != null">
         pay_orders_forecast = #{record.pay_orders_forecast,jdbcType=DOUBLE},
       </if>
-      <if test="record.statu != null">
-        statu = #{record.statu,jdbcType=INTEGER},
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
       </if>
       <if test="record.create_time != null">
         create_time = #{record.create_time,jdbcType=TIMESTAMP},
@@ -218,21 +218,21 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update forecast_past
+    update forecast_past_order
     set id = #{record.id,jdbcType=INTEGER},
       source_id = #{record.source_id,jdbcType=INTEGER},
       shop_id = #{record.shop_id,jdbcType=INTEGER},
       biz_date = #{record.biz_date,jdbcType=VARCHAR},
       pay_orders_original = #{record.pay_orders_original,jdbcType=INTEGER},
       pay_orders_forecast = #{record.pay_orders_forecast,jdbcType=DOUBLE},
-      statu = #{record.statu,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
       create_time = #{record.create_time,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="so.dian.pisces.domain.ForecastPastDO">
-    update forecast_past
+  <update id="updateByPrimaryKeySelective" parameterType="so.dian.pisces.domain.ForecastPastOrderDO">
+    update forecast_past_order
     <set>
       <if test="source_id != null">
         source_id = #{source_id,jdbcType=INTEGER},
@@ -249,8 +249,8 @@
       <if test="pay_orders_forecast != null">
         pay_orders_forecast = #{pay_orders_forecast,jdbcType=DOUBLE},
       </if>
-      <if test="statu != null">
-        statu = #{statu,jdbcType=INTEGER},
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
       </if>
       <if test="create_time != null">
         create_time = #{create_time,jdbcType=TIMESTAMP},
@@ -258,14 +258,14 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="so.dian.pisces.domain.ForecastPastDO">
-    update forecast_past
+  <update id="updateByPrimaryKey" parameterType="so.dian.pisces.domain.ForecastPastOrderDO">
+    update forecast_past_order
     set source_id = #{source_id,jdbcType=INTEGER},
       shop_id = #{shop_id,jdbcType=INTEGER},
       biz_date = #{biz_date,jdbcType=VARCHAR},
       pay_orders_original = #{pay_orders_original,jdbcType=INTEGER},
       pay_orders_forecast = #{pay_orders_forecast,jdbcType=DOUBLE},
-      statu = #{statu,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
       create_time = #{create_time,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

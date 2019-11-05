@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ForecastPastDOExample {
+public class ForecastPastOrderDOExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public ForecastPastDOExample() {
+    public ForecastPastOrderDOExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -475,63 +475,63 @@ public class ForecastPastDOExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatuIsNull() {
-            addCriterion("statu is null");
+        public Criteria andStatusIsNull() {
+            addCriterion("status is null");
             return (Criteria) this;
         }
 
-        public Criteria andStatuIsNotNull() {
-            addCriterion("statu is not null");
+        public Criteria andStatusIsNotNull() {
+            addCriterion("status is not null");
             return (Criteria) this;
         }
 
-        public Criteria andStatuEqualTo(Integer value) {
-            addCriterion("statu =", value, "statu");
+        public Criteria andStatusEqualTo(Integer value) {
+            addCriterion("status =", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatuNotEqualTo(Integer value) {
-            addCriterion("statu <>", value, "statu");
+        public Criteria andStatusNotEqualTo(Integer value) {
+            addCriterion("status <>", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatuGreaterThan(Integer value) {
-            addCriterion("statu >", value, "statu");
+        public Criteria andStatusGreaterThan(Integer value) {
+            addCriterion("status >", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatuGreaterThanOrEqualTo(Integer value) {
-            addCriterion("statu >=", value, "statu");
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("status >=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatuLessThan(Integer value) {
-            addCriterion("statu <", value, "statu");
+        public Criteria andStatusLessThan(Integer value) {
+            addCriterion("status <", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatuLessThanOrEqualTo(Integer value) {
-            addCriterion("statu <=", value, "statu");
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("status <=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatuIn(List<Integer> values) {
-            addCriterion("statu in", values, "statu");
+        public Criteria andStatusIn(List<Integer> values) {
+            addCriterion("status in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatuNotIn(List<Integer> values) {
-            addCriterion("statu not in", values, "statu");
+        public Criteria andStatusNotIn(List<Integer> values) {
+            addCriterion("status not in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatuBetween(Integer value1, Integer value2) {
-            addCriterion("statu between", value1, value2, "statu");
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
+            addCriterion("status between", value1, value2, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatuNotBetween(Integer value1, Integer value2) {
-            addCriterion("statu not between", value1, value2, "statu");
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("status not between", value1, value2, "status");
             return (Criteria) this;
         }
 

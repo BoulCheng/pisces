@@ -13,9 +13,9 @@ import java.util.List;
  */
 public interface BasicDataMapper {
 
-    List<ForecastShopDayDO> page(BasicDataDTO basicDataDTO);
+    List<ForecastShopDayDO> pagePast(BasicDataDTO basicDataDTO);
 
-    Long count(BasicDataDTO basicDataDTO);
+    Long countPast(BasicDataDTO basicDataDTO);
 
     List<ForecastShopDayDO> pageFuture(BasicDataDTO basicDataDTO);
 

@@ -45,11 +45,11 @@ public class BasicDataManager {
     }
 
     public List<ForecastShopDayDO> pagePast(BasicDataDTO basicDataDTO) {
-        return basicDataMapper.page(basicDataDTO);
+        return basicDataMapper.pagePast(basicDataDTO);
     }
 
     public Long countPast(BasicDataDTO basicDataDTO) {
-        return basicDataMapper.count(basicDataDTO);
+        return basicDataMapper.countPast(basicDataDTO);
     }
 
     public List<ForecastShopDayDO> pageFuture(BasicDataDTO basicDataDTO) {

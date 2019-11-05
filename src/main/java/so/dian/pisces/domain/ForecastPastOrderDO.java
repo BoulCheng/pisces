@@ -2,7 +2,7 @@ package so.dian.pisces.domain;
 
 import java.util.Date;
 
-public class ForecastPastDO {
+public class ForecastPastOrderDO {
     private Integer id;
 
     private Integer source_id;
@@ -15,7 +15,7 @@ public class ForecastPastDO {
 
     private Double pay_orders_forecast;
 
-    private Integer statu;
+    private Integer status;
 
     private Date create_time;
 
@@ -67,12 +67,12 @@ public class ForecastPastDO {
         this.pay_orders_forecast = pay_orders_forecast;
     }
 
-    public Integer getStatu() {
-        return statu;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setStatu(Integer statu) {
-        this.statu = statu;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Date getCreate_time() {
