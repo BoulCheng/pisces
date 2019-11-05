@@ -30,7 +30,7 @@ public class ForecastDataManager {
     private ForecastFutureAmountMapper forecastFutureAmountMapper;
 
 
-    public int batchInsert(List<ForecastPastOrderDO> forecastPastOrderDOS) {
+    public int batchInsertForPastOrder(List<ForecastPastOrderDO> forecastPastOrderDOS) {
         return forecastPastOrderMapper.batchInsert(forecastPastOrderDOS);
     }
 
