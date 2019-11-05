@@ -17,6 +17,7 @@ public class Seer {
     public enum SeerReturnEnum {
         RESULT,
         CATEGORICAL_INPUT_ISNULL_STAT,
+        EXCEPTION,
     }
 
     public static Evaluator loadPmml(InputStream is){
