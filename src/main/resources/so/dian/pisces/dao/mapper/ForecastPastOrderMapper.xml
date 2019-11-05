@@ -107,12 +107,12 @@
   <insert id="batchInsert">
     insert into forecast_past_order (source_id, shop_id,
     biz_date, pay_orders_original, pay_orders_forecast,
-    statu, create_time)
+    status, create_time)
     values
     <foreach collection="items" item="item" separator=",">
       (#{item.source_id,jdbcType=INTEGER}, #{item.shop_id,jdbcType=INTEGER},
       #{item.biz_date,jdbcType=VARCHAR}, #{item.pay_orders_original,jdbcType=INTEGER}, #{item.pay_orders_forecast,jdbcType=DOUBLE},
-      #{item.statu,jdbcType=INTEGER}, #{item.create_time,jdbcType=TIMESTAMP})
+      #{item.status,jdbcType=INTEGER}, #{item.create_time,jdbcType=TIMESTAMP})
     </foreach>
   </insert>
 
