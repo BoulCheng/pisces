@@ -15,9 +15,9 @@ import java.util.concurrent.RecursiveTask;
  * Created on 2019/10/23
  * Description
  */
-public class SeerAmountRecursiveTask extends AbstractSeerRecursiveTask {
+public class ForecastPastAmountRecursiveTask extends AbstractSeerRecursiveTask {
 
-    public SeerAmountRecursiveTask(int currDepth, int begin, int end, SeerConfiguration seerConfiguration, List<ForecastShopDayDO> forecastDOList) {
+    public ForecastPastAmountRecursiveTask(int currDepth, int begin, int end, SeerConfiguration seerConfiguration, List<ForecastShopDayDO> forecastDOList) {
         super(currDepth, begin, end, seerConfiguration, forecastDOList);
     }
 
@@ -80,6 +80,6 @@ public class SeerAmountRecursiveTask extends AbstractSeerRecursiveTask {
 
     @Override
     protected RecursiveTask newRecursiveTask(int currDepth, int begin, int end, SeerConfiguration seerConfiguration, List<ForecastShopDayDO> forecastDOList) {
-        return new SeerAmountRecursiveTask(currDepth, begin, end, seerConfiguration, forecastDOList);
+        return new ForecastPastAmountRecursiveTask(currDepth, begin, end, seerConfiguration, forecastDOList);
     }
 }

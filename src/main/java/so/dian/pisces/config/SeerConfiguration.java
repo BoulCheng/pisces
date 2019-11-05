@@ -6,7 +6,7 @@ import so.dian.pisces.common.util.FileUtil;
 import so.dian.pisces.domain.ForecastShopDayDO;
 import so.dian.pisces.manager.ForecastDataManager;
 import so.dian.pisces.manager.task.ForecastFutureAmountRecursiveTask;
-import so.dian.pisces.manager.task.SeerAmountRecursiveTask;
+import so.dian.pisces.manager.task.ForecastPastAmountRecursiveTask;
 import so.dian.pisces.manager.task.ForecastPastOrderRecursiveTask;
 
 import java.util.ArrayList;
@@ -238,7 +238,7 @@ public final class SeerConfiguration {
         if (RecursiveTaskEnum.ORDER.equals(recursiveTaskEnum)) {
             return new ForecastPastOrderRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), this, forecastDOList);
         } else if (RecursiveTaskEnum.AMOUNT.equals(recursiveTaskEnum)) {
-            return new SeerAmountRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), this, forecastDOList);
+            return new ForecastPastAmountRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), this, forecastDOList);
         } else if (RecursiveTaskEnum.FUTURE_ORDER.equals(recursiveTaskEnum)) {
 
         } else if (RecursiveTaskEnum.FUTURE_AMOUNT.equals(recursiveTaskEnum)) {
