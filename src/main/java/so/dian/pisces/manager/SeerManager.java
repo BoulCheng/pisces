@@ -9,7 +9,6 @@ import so.dian.pisces.common.util.LocalDateUtils;
 import so.dian.pisces.config.SeerConfiguration;
 import so.dian.pisces.domain.BasicDataDTO;
 import so.dian.pisces.domain.ForecastShopDayDO;
-import so.dian.pisces.manager.task.SeerRecursiveTask;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -34,7 +33,7 @@ public class SeerManager {
     private BasicDataManager basicDataManager;
 
     @Autowired
-    private ForecastPastManager forecastPastManager;
+    private ForecastDataManager forecastDataManager;
 
     public void predict() {
         LocalDate localDate = LocalDate.now();
@@ -45,7 +44,7 @@ public class SeerManager {
     }
 
     public void predict(String orderDate, SeerConfiguration.RecursiveTaskEnum recursiveTaskEnum) {
-        SeerConfiguration seerConfiguration = SeerConfiguration.newBuilder(8, forecastPastManager, recursiveTaskEnum).build();
+        SeerConfiguration seerConfiguration = SeerConfiguration.newBuilder(8, forecastDataManager, recursiveTaskEnum).build();
         Map<String, Map<String, Object>> pmmlCategoricalValuesMap = getCategoricalValues(seerConfiguration.peekEvaluator());
         seerConfiguration.setPmmlCategoricalValuesMap(pmmlCategoricalValuesMap);
 

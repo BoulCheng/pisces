@@ -79,7 +79,7 @@ public class SeerRecursiveTask extends RecursiveTask<Long> {
                 forecastPastOrderDOList.add(forecastPastOrderDO);
                 if (forecastPastOrderDOList.size() > 3000 || (this.end - 1 == i)) {
                     try {
-                        this.seerConfiguration.getForecastPastManager().batchInsert(forecastPastOrderDOList);
+                        this.seerConfiguration.getForecastDataManager().batchInsert(forecastPastOrderDOList);
                         forecastPastOrderDOList.clear();
                     } catch (Exception e) {
                         // log

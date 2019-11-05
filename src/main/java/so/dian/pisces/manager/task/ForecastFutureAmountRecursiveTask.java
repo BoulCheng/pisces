@@ -67,7 +67,7 @@ public class ForecastFutureAmountRecursiveTask extends AbstractSeerRecursiveTask
             forecastFutureAmountDOList.add(forecastFutureAmountDO);
             if (forecastFutureAmountDOList.size() > 3000 || (this.end - 1 == i)) {
                 try {
-                    this.seerConfiguration.getForecastPastManager().batchInsertForFuturePaymentAmount(forecastFutureAmountDOList);
+                    this.seerConfiguration.getForecastDataManager().batchInsertForFuturePaymentAmount(forecastFutureAmountDOList);
                     forecastFutureAmountDOList.clear();
                 } catch (Exception e) {
                     // log

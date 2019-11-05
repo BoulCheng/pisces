@@ -17,7 +17,7 @@ import java.util.List;
  * Description
  */
 @Service
-public class ForecastPastManager {
+public class ForecastDataManager {
 
 
     @Autowired
