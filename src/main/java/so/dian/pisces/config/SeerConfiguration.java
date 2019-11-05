@@ -187,13 +187,13 @@ public final class SeerConfiguration {
 
     public enum RecursiveTaskEnum {
         /**
-         * 订单任务
+         * 预测过去订单任务
          */
-        ORDER,
+        PAST_ORDER,
         /**
-         * 支付金额任务
+         * 预测过去支付金额任务
          */
-        AMOUNT,
+        PAST_AMOUNT,
 
         /**
          * 预测未来订单任务
@@ -206,7 +206,7 @@ public final class SeerConfiguration {
         FUTURE_AMOUNT;
 
         public boolean isPast() {
-            if (ORDER.equals(this) || AMOUNT.equals(this)) {
+            if (PAST_ORDER.equals(this) || PAST_AMOUNT.equals(this)) {
                 return true;
             }
             return false;
@@ -220,14 +220,14 @@ public final class SeerConfiguration {
         }
 
         public boolean isOrder() {
-            if (ORDER.equals(this) || FUTURE_ORDER.equals(this)) {
+            if (PAST_ORDER.equals(this) || FUTURE_ORDER.equals(this)) {
                 return true;
             }
             return false;
         }
 
         public boolean isAmount() {
-            if (AMOUNT.equals(this) || FUTURE_AMOUNT.equals(this)) {
+            if (PAST_AMOUNT.equals(this) || FUTURE_AMOUNT.equals(this)) {
                 return true;
             }
             return false;
@@ -235,9 +235,9 @@ public final class SeerConfiguration {
     }
 
     public RecursiveTask<Long> initRecursiveTask(RecursiveTaskEnum recursiveTaskEnum, List<ForecastShopDayDO> forecastDOList) {
-        if (RecursiveTaskEnum.ORDER.equals(recursiveTaskEnum)) {
+        if (RecursiveTaskEnum.PAST_ORDER.equals(recursiveTaskEnum)) {
             return new ForecastPastOrderRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), this, forecastDOList);
-        } else if (RecursiveTaskEnum.AMOUNT.equals(recursiveTaskEnum)) {
+        } else if (RecursiveTaskEnum.PAST_AMOUNT.equals(recursiveTaskEnum)) {
             return new ForecastPastAmountRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), this, forecastDOList);
         } else if (RecursiveTaskEnum.FUTURE_ORDER.equals(recursiveTaskEnum)) {
 
