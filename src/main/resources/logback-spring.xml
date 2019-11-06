@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- scan 配置文件如果发生改变，将会被重新加载  scanPeriod 检测间隔时间-->
+<configuration debug="false" scan="true" scanPeriod="60 seconds">
+  <!--引入默认配置-->
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+<!--  <springProperty scope="context" name="bizLevel" source="logging.biz.level" defaultValue="INFO"/>-->
+  <springProperty scope="context" name="springLevel" source="logging.spring.level" defaultValue="INFO"/>
+<!--  <springProperty scope="context" name="lifeCycleLevel" source="logging.lifeCycle.level" defaultValue="WARN"/>-->
+<!--  <springProperty scope="context" name="cacheLevel" source="logging.cache.level" defaultValue="WARN"/>-->
+
+  <!--自定义环境变量-->
+  <property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}"/>
+  <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+<!--  <property name="BASIC_FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS}|${LOG_LEVEL_PATTERN:-%5p}|%m %n"/>-->
+  <property name="ERROR_FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS}|%m %n"/>
+
+  <!-- 项目全量日志，建议每个logger中都加入此appender，用于链路调用跟踪 -->
+  <appender name="SPRING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_FILE}</file>
+    <!-- 循环政策：基于时间创建日志文件 -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- 日志命名:单个文件大于128MB 按照时间+自增i 生成log文件 -->
+      <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+      <maxHistory>${MAX_HISTORY:-7}</maxHistory>
+    </rollingPolicy>
+    <append>true</append>
+    <!-- 日志格式 -->
+    <encoder>
+      <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+    </encoder>
+    <!-- 日志临界值过滤器 低于该级别的日志不记录-->
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>${springLevel}</level>
+    </filter>
+  </appender>
+
+  <!-- 错误日志，只打印ERROR级别未处理异常堆栈跟踪日志：用于报警通知-->
+  <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_PATH}/error.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_PATH}/error.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+      <maxHistory>${MAX_HISTORY:-7}</maxHistory>
+    </rollingPolicy>
+    <append>true</append>
+    <encoder>
+      <pattern>${ERROR_FILE_LOG_PATTERN}</pattern>
+    </encoder>
+    <!-- 日志级别过滤器 只记录error级别的日志-->
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <!-- 过滤的级别 -->
+      <level>ERROR</level>
+      <!-- 匹配时的操作：接收（记录） -->
+      <onMatch>ACCEPT</onMatch>
+      <!-- 不匹配时的操作：拒绝（不记录） -->
+      <onMismatch>DENY</onMismatch>
+    </filter>
+  </appender>
+
+<!--  &lt;!&ndash; 其他自定义业务划分日志 &ndash;&gt;-->
+<!--  <appender name="BIZ_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--    <file>${LOG_PATH}/biz.log</file>-->
+<!--    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--      <fileNamePattern>${LOG_PATH}/biz.log.%d{yyyy-MM-dd}.gz</fileNamePattern>-->
+<!--      <maxHistory>${MAX_HISTORY:-7}</maxHistory>-->
+<!--    </rollingPolicy>-->
+<!--    <append>true</append>-->
+<!--    <encoder>-->
+<!--      <pattern>${BASIC_FILE_LOG_PATTERN}</pattern>-->
+<!--    </encoder>-->
+<!--    &lt;!&ndash; 日志临界值过滤器 &ndash;&gt;-->
+<!--    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--      <level>${bizLevel}</level>-->
+<!--    </filter>-->
+<!--  </appender>-->
+
+<!--  &lt;!&ndash; RT监控日志，只打印INFO级别@RTMonitor监控日志：用于延时分析报警通知&ndash;&gt;-->
+<!--  <appender name="RT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--    <file>${LOG_PATH}/rt.log</file>-->
+<!--    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--      <fileNamePattern>${LOG_PATH}/rt.log.%d{yyyy-MM-dd}.gz</fileNamePattern>-->
+<!--      <maxHistory>${MAX_HISTORY:-7}</maxHistory>-->
+<!--    </rollingPolicy>-->
+<!--    <append>true</append>-->
+<!--    <encoder>-->
+<!--      <pattern>${BASIC_FILE_LOG_PATTERN}</pattern>-->
+<!--    </encoder>-->
+<!--    &lt;!&ndash; 日志级别过滤器 &ndash;&gt;-->
+<!--    <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+<!--      &lt;!&ndash; 过滤的级别 &ndash;&gt;-->
+<!--      <level>INFO</level>-->
+<!--      &lt;!&ndash; 匹配时的操作：接收（记录） &ndash;&gt;-->
+<!--      <onMatch>ACCEPT</onMatch>-->
+<!--      &lt;!&ndash; 不匹配时的操作：拒绝（不记录） &ndash;&gt;-->
+<!--      <onMismatch>DENY</onMismatch>-->
+<!--    </filter>-->
+<!--  </appender>-->
+
+<!--  &lt;!&ndash; sql拦截监控&ndash;&gt;-->
+<!--  <appender name="SQLRT_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--    <file>${LOG_PATH}/sqlRt.log</file>-->
+<!--    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--      <fileNamePattern>${LOG_PATH}/sqlRt.log.%d{yyyy-MM-dd}.gz</fileNamePattern>-->
+<!--      <maxHistory>${MAX_HISTORY:-7}</maxHistory>-->
+<!--    </rollingPolicy>-->
+<!--    <append>true</append>-->
+<!--    <encoder>-->
+<!--      <pattern>${ERROR_FILE_LOG_PATTERN}</pattern>-->
+<!--    </encoder>-->
+<!--  </appender>-->
+
+<!--  &lt;!&ndash;日志topic为error，即 @Slf4j(topic = "error") 或 LoggerFactory.getLogger("error") 方式打印的日志&ndash;&gt;-->
+<!--  <logger name="error" level="ERROR" additivity="false"> error日志放入root 不设置单独的logger ERROR_FILE本身有过滤唯独放error级别的日志-->
+<!--    <appender-ref ref="ERROR_FILE"/>-->
+<!--    <appender-ref ref="SPRING_FILE"/>-->
+<!--    <appender-ref ref="CONSOLE"/>-->
+<!--  </logger>-->
+
+<!--  &lt;!&ndash;日志topic为biz，即 @Slf4j(topic = "biz") 或 LoggerFactory.getLogger("biz") 方式打印的日志&ndash;&gt;-->
+<!--  <logger name="biz" level="${bizLevel}" additivity="false">-->
+<!--    <appender-ref ref="BIZ_FILE"/>-->
+<!--    <appender-ref ref="SPRING_FILE"/>-->
+<!--    <appender-ref ref="CONSOLE"/>-->
+<!--  </logger>-->
+
+<!--  &lt;!&ndash;日志topic为rt，即 @Slf4j(topic = "rt") 或 LoggerFactory.getLogger("rt") 方式打印的日志&ndash;&gt;-->
+<!--  <logger name="rt" level="INFO" additivity="false">-->
+<!--    <appender-ref ref="RT_FILE"/>-->
+<!--  </logger>-->
+
+<!--  &lt;!&ndash;日志topic为sqlRt，即 @Slf4j(topic = "sqlRt") 或 LoggerFactory.getLogger("sqlRt") 方式打印的日志&ndash;&gt;-->
+<!--  <logger name="sqlRt" level="INFO" additivity="false">-->
+<!--    <appender-ref ref="SQLRT_FILE"/>-->
+<!--  </logger>-->
+
+  <!--默认日志topic，即 @Slf4j 或 LoggerFactory.getLogger(ClassName.class}) 方式打印的日志-->
+  <root level="${springLevel}">
+    <!--SPRING_FILE 中通过 ThresholdFilter 过滤了日志级别 -->
+    <appender-ref ref="SPRING_FILE"/>
+    <!--console-appender.xml CONSOLE 并未做任何日志级别的过滤 这里CONSOLE接受不低于root level级别的日志-->
+    <appender-ref ref="CONSOLE"/>
+    <!--ERROR_FILE 中通过LevelFilter限定了指定日志级别 -->
+    <appender-ref ref="ERROR_FILE"/>
+  </root>
+
+<!--  <appender name="druid" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--    <File>${LOG_PATH}/druid.log</File>-->
+<!--    <encoder>-->
+<!--      <pattern>${BASIC_FILE_LOG_PATTERN}</pattern>-->
+<!--    </encoder>-->
+<!--    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--      <level>DEBUG</level>-->
+<!--    </filter>-->
+<!--    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--      <fileNamePattern>${LOG_PATH}/druid.log.%d{yyyy-MM-dd}</fileNamePattern>-->
+<!--      <maxHistory>7</maxHistory>-->
+<!--    </rollingPolicy>-->
+<!--  </appender>-->
+
+<!--  <appender name="druid-queue" class="ch.qos.logback.classic.AsyncAppender">-->
+<!--    <queueSize>512</queueSize>-->
+<!--    <appender-ref ref="druid"/>-->
+<!--  </appender>-->
+
+<!--  <logger name="com.alibaba.druid.filter.stat.StatFilter" level="DEBUG" additivity="false">-->
+<!--    <appender-ref ref="druid-queue"/>-->
+<!--  </logger>-->
+
+<!--  <logger name="druid.sql.Statement" level="ERROR" additivity="false">-->
+<!--    <appender-ref ref="druid-queue"/>-->
+<!--  </logger>-->
+
+<!--  <logger name="so.dian.pisces.dao">-->
+<!--    <level>DEBUG</level>-->
+<!--  </logger>-->
+
+  <!--JMX管理 Spring Boot Admin-->
+  <jmxConfigurator/>
+</configuration>

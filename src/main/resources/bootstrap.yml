@@ -1,0 +1,17 @@
+##################配置中心配置选择#################
+spring:
+  application:
+    name: pisces
+  profiles:
+    # 默认获取配置中心local配置，获取不到调用本地的application-local
+    # 服务器部署会重置该参数
+    active: local
+  cloud:
+    config:
+      enabled: true
+      profile: ${spring.profiles.active}
+      label: ${spring.profiles.active}
+      uri: http://lorinser-in.dian.so
+      username: lorinser
+      password: 6xuq6x8v
+##################配置中心配置选择#################

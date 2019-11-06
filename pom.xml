@@ -89,6 +89,67 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- spring -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+<!--			<exclusions>-->
+<!--				<exclusion>-->
+<!--					<artifactId>netty-transport</artifactId>-->
+<!--					<groupId>io.netty</groupId>-->
+<!--				</exclusion>-->
+<!--				<exclusion>-->
+<!--					<artifactId>netty-handler</artifactId>-->
+<!--					<groupId>io.netty</groupId>-->
+<!--				</exclusion>-->
+<!--				<exclusion>-->
+<!--					<artifactId>netty-common</artifactId>-->
+<!--					<groupId>io.netty</groupId>-->
+<!--				</exclusion>-->
+<!--				<exclusion>-->
+<!--					<artifactId>netty-codec</artifactId>-->
+<!--					<groupId>io.netty</groupId>-->
+<!--				</exclusion>-->
+<!--				<exclusion>-->
+<!--					<artifactId>netty-buffer</artifactId>-->
+<!--					<groupId>io.netty</groupId>-->
+<!--				</exclusion>-->
+<!--			</exclusions>-->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-hystrix</artifactId>
+<!--			<exclusions>-->
+<!--				<exclusion>-->
+<!--					<artifactId>commons-lang3</artifactId>-->
+<!--					<groupId>org.apache.commons</groupId>-->
+<!--				</exclusion>-->
+<!--			</exclusions>-->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -110,7 +171,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>so.dian.legolas.LegolasApplication</mainClass>
+					<mainClass>so.dian.pisces.PiscesApplication</mainClass>
 				</configuration>
 			</plugin>
 

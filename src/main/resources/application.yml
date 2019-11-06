@@ -1,37 +1,54 @@
-## RDBMS
-#druid:
-#  datasource:
-#    mysql:
-#      url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&autoReconnect=true
-#      username: root
-#      password: yuanming
-#      driver-class-name: com.mysql.jdbc.Driver
-#      initial-size: 50
-#      min-idle: 10
-#      max-active: 100
-#      max-wait: 60000
-#      testOnBorrow: false
-#      testOnReturn: false
-#      testWhileIdle: true
-#      timeBetweenEvictionRunsMillis: 60000
-#      validationQuery: SELECT 1 FROM DUAL
-#      filters: 'stat,wall,slf4j'
-
-druid:
-  datasource:
-    mysql:
-      url: jdbc:postgresql://pg-dev.dian.so:5432/dx2
-      #      url: jdbc:postgresql://dx2-real-pg.dian.so:1921/dx2
-      username: dx2
-      password: helloword
-      driver-class-name: org.postgresql.Driver
-      initial-size: 1
-      min-idle: 5
-      max-active: 5
-      max-wait: 60000
-      testOnBorrow: false
-      testOnReturn: false
-      testWhileIdle: true
-      timeBetweenEvictionRunsMillis: 60000
-      validationQuery: SELECT 1
-      filters: 'stat,wall,slf4j'
+server:
+  port: 8080
+info:
+  name: ${spring.application.name}
+  os: ${os.name}
+  instance-id: ${eureka.instance.instance-id}
+#eureka:
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    # 定时刷新本地缓存时间
+#    registry-fetch-interval-seconds: 5
+#    healthcheck:
+#      enabled: true
+#    service-url:
+#      defaultZone: http://${security.user.name}:${security.user.password}@eureka-in-dev.dian.so:8181/eureka/
+#  instance:
+#    nonSecurePort: 80
+#    prefer-ip-address: true
+#    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+#    health-check-url-path: ${management.context-path}/health
+#    status-page-url-path: ${management.context-path}/info
+#    # 心跳间隔，5秒
+#    lease-renewal-interval-in-seconds: 5
+#    # 没有心跳的淘汰时间，10秒
+#    lease-expiration-duration-in-seconds: 10
+#    metadata-map:
+#      instance-id: ${eureka.instance.instance-id}
+#      user.name: ${security.user.name}
+#      user.password: ${security.user.password}
+ribbon:
+  # 服务列表缓存时间,默认30s
+  ServerListRefreshInterval: 2000
+  # 对当前实例的重试次数，默认1
+  MaxAutoRetries: 0
+  # 切换下一个实例重试次数，默认1
+  MaxAutoRetriesNextServer: 0
+management:
+  context-path: /admin
+  security:
+    enabled: true
+security:
+  basic:
+    enabled: true
+    path: ${management.context-path}
+  user:
+    name: helloEureka
+    password: zhimakaimen
+logging:
+  path: ${user.home}/logs/${spring.application.name}
+  file: ${logging.path}/${spring.application.name}.log
+hystrix:
+  command:
+    default.execution.isolation.thread.timeoutInMilliseconds: 5000
