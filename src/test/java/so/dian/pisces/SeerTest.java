@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import so.dian.pisces.config.SeerConfiguration;
 import so.dian.pisces.manager.SeerManager;
 
 /**
@@ -23,6 +22,6 @@ public class SeerTest {
 
     @Test
     public void predict() {
-        seerManager.predict("20191025", SeerConfiguration.RecursiveTaskEnum.AMOUNT);
+//        seerManager.predict("20191109", SeerConfiguration.RecursiveTaskEnum.FUTURE_AMOUNT);
     }
 }
