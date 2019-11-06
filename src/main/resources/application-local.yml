@@ -126,3 +126,14 @@ druid:
 
 swagger:
   enable: true
+
+elasticJob:
+  zookeeper:
+    serverlists: zookeeper-dev.dian.so:2181
+    namespace: elastic-job-pisces-local
+  job:
+    SeerJob:
+      id: SeerJob
+      count: 1
+      parameters: 0=A
+      cron: 0 0 0 ? * * *

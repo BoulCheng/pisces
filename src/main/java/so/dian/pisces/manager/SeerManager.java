@@ -38,9 +38,11 @@ public class SeerManager {
     public void predict() {
         LocalDate localDate = LocalDate.now();
         String date = LocalDateUtils.minusDays(localDate, 1);
+        predict(date, SeerConfiguration.RecursiveTaskEnum.PAST_ORDER);
         predict(date, SeerConfiguration.RecursiveTaskEnum.PAST_AMOUNT);
         date = LocalDateUtils.plusDays(localDate, 7);
-        predict(date, SeerConfiguration.RecursiveTaskEnum.PAST_AMOUNT);
+        predict(date, SeerConfiguration.RecursiveTaskEnum.FUTURE_ORDER);
+        predict(date, SeerConfiguration.RecursiveTaskEnum.FUTURE_AMOUNT);
     }
 
     public void predict(String orderDate, SeerConfiguration.RecursiveTaskEnum recursiveTaskEnum) {
