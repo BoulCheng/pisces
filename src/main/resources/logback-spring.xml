@@ -173,6 +173,8 @@
 
 <!--  <logger name="so.dian.pisces.dao">-->
 <!--    <level>DEBUG</level>-->
+<!--    &lt;!&ndash;console-appender.xml CONSOLE 并未做任何日志级别的过滤 这里CONSOLE接受不低于DEBUG级别的日志&ndash;&gt;-->
+<!--    <appender-ref ref="CONSOLE"/>-->
 <!--  </logger>-->
 
   <!--JMX管理 Spring Boot Admin-->
