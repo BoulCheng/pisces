@@ -10,7 +10,7 @@ import java.util.concurrent.RecursiveTask;
 /**
  * @author yuanming
  * Created on 2019/10/23
- * Description 预测过去订单
+ * Description 预测过去订单数
  */
 public class ForecastPastOrderRecursiveTask extends AbstractSeerRecursiveTask<ForecastPastOrderDO> {
 

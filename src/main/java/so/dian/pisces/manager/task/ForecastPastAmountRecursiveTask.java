@@ -33,7 +33,7 @@ public class ForecastPastAmountRecursiveTask extends AbstractSeerRecursiveTask<F
 
     @Override
     protected void batchInsert(List<ForecastPastAmountDO> list) {
-        this.seerConfiguration.getForecastDataManager().batchInsertForPaymentAmount(list);
+        this.seerConfiguration.getForecastDataManager().batchInsertForPastPaymentAmount(list);
     }
 
     @Override

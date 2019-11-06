@@ -3,9 +3,11 @@ package so.dian.pisces.manager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import so.dian.pisces.dao.mapper.ForecastFutureAmountMapper;
+import so.dian.pisces.dao.mapper.ForecastFutureOrderMapper;
 import so.dian.pisces.dao.mapper.ForecastPastAmountMapper;
 import so.dian.pisces.dao.mapper.ForecastPastOrderMapper;
 import so.dian.pisces.domain.ForecastFutureAmountDO;
+import so.dian.pisces.domain.ForecastFutureOrderDO;
 import so.dian.pisces.domain.ForecastPastAmountDO;
 import so.dian.pisces.domain.ForecastPastOrderDO;
 
@@ -24,6 +26,9 @@ public class ForecastDataManager {
     private ForecastPastOrderMapper forecastPastOrderMapper;
 
     @Autowired
+    private ForecastFutureOrderMapper forecastFutureOrderMapper;
+
+    @Autowired
     private ForecastPastAmountMapper forecastPastAmountMapper;
 
     @Autowired
@@ -34,7 +39,11 @@ public class ForecastDataManager {
         return forecastPastOrderMapper.batchInsert(forecastPastOrderDOS);
     }
 
-    public int batchInsertForPaymentAmount(List<ForecastPastAmountDO> forecastPastAmountDOS) {
+    public int batchInsertForFutureOrder(List<ForecastFutureOrderDO> forecastFutureOrderDOS) {
+        return forecastFutureOrderMapper.batchInsert(forecastFutureOrderDOS);
+    }
+
+    public int batchInsertForPastPaymentAmount(List<ForecastPastAmountDO> forecastPastAmountDOS) {
         return forecastPastAmountMapper.batchInsert(forecastPastAmountDOS);
     }
 
