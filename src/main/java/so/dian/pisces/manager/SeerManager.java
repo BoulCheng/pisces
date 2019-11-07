@@ -3,6 +3,8 @@ package so.dian.pisces.manager;
 import org.dmg.pmml.*;
 import org.jpmml.evaluator.Evaluator;
 import org.jpmml.evaluator.InputField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import so.dian.pisces.common.util.LocalDateUtils;
@@ -26,8 +28,10 @@ import java.util.concurrent.ForkJoinTask;
  */
 @Service
 public class SeerManager {
+    private Logger log = LoggerFactory.getLogger(getClass());
+
     private static final Object object = new Object();
-    private static final ForkJoinPool forkJoinPool = new ForkJoinPool(6);
+    private static final ForkJoinPool forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
 
     @Autowired
     private BasicDataManager basicDataManager;
@@ -46,7 +50,7 @@ public class SeerManager {
     }
 
     public void predict(String orderDate, SeerConfiguration.RecursiveTaskEnum recursiveTaskEnum) {
-        SeerConfiguration seerConfiguration = SeerConfiguration.newBuilder(8, forecastDataManager, recursiveTaskEnum).build();
+        SeerConfiguration seerConfiguration = SeerConfiguration.newBuilder(Runtime.getRuntime().availableProcessors(), forecastDataManager, recursiveTaskEnum).build();
         Map<String, Map<String, Object>> pmmlCategoricalValuesMap = getCategoricalValues(seerConfiguration.peekEvaluator());
         seerConfiguration.setPmmlCategoricalValuesMap(pmmlCategoricalValuesMap);
 

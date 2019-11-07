@@ -38,7 +38,7 @@ public class BasicDataDTO {
     }
 
     public void setPageCount(Long total) {
-        Integer pageCount = (int) (total / this.pageSize);
+        int pageCount = (int) (total / this.pageSize);
         if (total % this.pageSize > 0) {
             pageCount++;
         }

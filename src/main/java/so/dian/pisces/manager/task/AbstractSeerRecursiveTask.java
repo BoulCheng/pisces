@@ -2,6 +2,8 @@ package so.dian.pisces.manager.task;
 
 
 import org.jpmml.evaluator.Evaluator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import so.dian.pisces.common.seer.Seer;
 import so.dian.pisces.config.SeerConfiguration;
 import so.dian.pisces.domain.ForecastShopDayDO;
@@ -17,6 +19,7 @@ import java.util.concurrent.RecursiveTask;
  * Description 任务基类
  */
 public abstract class AbstractSeerRecursiveTask<T> extends RecursiveTask<Long> {
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     private static final int BATCH_INSERT_THRESHOLD = 3000;
 
