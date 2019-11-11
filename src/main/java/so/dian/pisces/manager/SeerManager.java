@@ -50,36 +50,41 @@ public class SeerManager {
     }
 
     public void predict(String orderDate, SeerConfiguration.RecursiveTaskEnum recursiveTaskEnum) {
-        SeerConfiguration seerConfiguration = SeerConfiguration.newBuilder(Runtime.getRuntime().availableProcessors(), forecastDataManager, recursiveTaskEnum).build();
-        Map<String, Map<String, Object>> pmmlCategoricalValuesMap = getCategoricalValues(seerConfiguration.peekEvaluator());
-        seerConfiguration.setPmmlCategoricalValuesMap(pmmlCategoricalValuesMap);
+        long t = System.currentTimeMillis();
+        log.info("SeerJob>>>predict {} {} begin...", orderDate, recursiveTaskEnum.name());
+        try {
+            SeerConfiguration seerConfiguration = SeerConfiguration.newBuilder(Runtime.getRuntime().availableProcessors(), forecastDataManager, recursiveTaskEnum).build();
+            Map<String, Map<String, Object>> pmmlCategoricalValuesMap = getCategoricalValues(seerConfiguration.peekEvaluator());
+            seerConfiguration.setPmmlCategoricalValuesMap(pmmlCategoricalValuesMap);
 
-        List<ForecastShopDayDO> forecastDOList;
-        BasicDataDTO basicDataDTO = new BasicDataDTO(orderDate, 40000);
-        Long total = basicDataManager.count(basicDataDTO, recursiveTaskEnum);
-        if (Objects.isNull(total) || total == 0) {
-            // warn log
-            return;
+            List<ForecastShopDayDO> forecastDOList;
+            BasicDataDTO basicDataDTO = new BasicDataDTO(orderDate, 40000);
+            Long total = basicDataManager.count(basicDataDTO, recursiveTaskEnum);
+            if (Objects.isNull(total) || total == 0) {
+                log.warn("SeerJob>>>basicData is empty, orderDate:{}, recursiveTaskEnum:{}", orderDate, recursiveTaskEnum.name());
+                return;
+            }
+            basicDataDTO.setPageCount(total);
+
+            do {
+                forecastDOList = basicDataManager.page(basicDataDTO, recursiveTaskEnum);
+    //            SeerRecursiveTask seerRecursiveTask = new SeerRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), seerConfiguration, forecastDOList);
+                ForkJoinTask<Long> forkJoinTask = forkJoinPool.submit(seerConfiguration.initRecursiveTask(recursiveTaskEnum, forecastDOList));
+
+                if (forkJoinTask.isCompletedAbnormally()) {
+                    log.error("SeerJob>>>ForkJoinTask Abnormally, orderDate:{}, recursiveTaskEnum:{}, e: ", orderDate, recursiveTaskEnum.name(), forkJoinTask.getException());
+                }
+
+                try {
+                    forkJoinTask.get();
+                } catch (Exception e) {
+                    log.error("SeerJob>>>ForkJoinTask ExecutionException, orderDate:{}, recursiveTaskEnum:{}, e: ", orderDate, recursiveTaskEnum.name(), e);
+                }
+            } while (basicDataDTO.nextPage() <= basicDataDTO.getPageCount() && seerConfiguration.refresh());
+        } catch (Exception e) {
+            log.error("SeerJob>>>predict {} {} exceptionally:", orderDate, recursiveTaskEnum.name(), e);
         }
-        basicDataDTO.setPageCount(total);
-
-        do {
-            forecastDOList = basicDataManager.page(basicDataDTO, recursiveTaskEnum);
-//            SeerRecursiveTask seerRecursiveTask = new SeerRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), seerConfiguration, forecastDOList);
-            ForkJoinTask<Long> forkJoinTask = forkJoinPool.submit(seerConfiguration.initRecursiveTask(recursiveTaskEnum, forecastDOList));
-
-            if (forkJoinTask.isCompletedAbnormally()) {
-                System.out.println(forkJoinTask.getException());
-            }
-
-            try {
-                forkJoinTask.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        } while (basicDataDTO.nextPage() <= basicDataDTO.getPageCount() && seerConfiguration.refresh());
+        log.info("SeerJob>>>predict {} {} end, elapse:{}", orderDate, recursiveTaskEnum.name(), System.currentTimeMillis() - t);
     }
 
 
