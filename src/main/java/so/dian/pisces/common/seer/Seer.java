@@ -1,18 +1,19 @@
 package so.dian.pisces.common.seer;
 
-import org.dmg.pmml.Value;
 import org.dmg.pmml.*;
 import org.jpmml.evaluator.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import so.dian.pisces.config.SeerConfiguration;
 
 import javax.xml.bind.JAXBException;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
 public class Seer {
+    private static Logger log = LoggerFactory.getLogger(Seer.class);
 
     public enum SeerReturnEnum {
         RESULT,
@@ -22,28 +23,25 @@ public class Seer {
 
     public static Evaluator loadPmml(InputStream is){
         PMML pmml = new PMML();
-
         if(is == null){
             return null;
         }
         try {
             pmml = org.jpmml.model.PMMLUtil.unmarshal(is);
         } catch (SAXException e1) {
-            e1.printStackTrace();
-        } catch (JAXBException e1) {
-            e1.printStackTrace();
-        }finally {
+            log.error("loadPmml error", e1);
+        } catch (JAXBException e2) {
+            log.error("loadPmml error", e2);
+        } finally {
             //关闭输入流
             try {
                 is.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("loadPmml error", e);
             }
         }
         ModelEvaluatorFactory modelEvaluatorFactory = ModelEvaluatorFactory.newInstance();
-        Evaluator evaluator = modelEvaluatorFactory.newModelEvaluator(pmml);
-        pmml = null;
-        return evaluator;
+        return modelEvaluatorFactory.newModelEvaluator(pmml);
     }
 
     public static EnumMap<SeerReturnEnum, Object> predict(Evaluator evaluator, Map<String, Object> data, SeerConfiguration seerConfiguration) {
@@ -72,10 +70,10 @@ public class Seer {
                         categoricalInputIsNullStat++;
                     }
                 } else {
-                    // error log
+                    log.error("not found OpType:{}", field.getOpType());
                 }
             } else {
-                // warn log
+                log.error("field is not DataField, field:{}", field);
             }
 
             FieldValue inputFieldValue = inputField.prepare(rawValue);
@@ -88,42 +86,10 @@ public class Seer {
         FieldName targetFieldName = targetField.getName();
 
         Object targetFieldValue = results.get(targetFieldName);
-//        System.out.println("target: " + targetFieldName.getValue() + " value: " + targetFieldValue);
         EnumMap<SeerReturnEnum, Object> ret = new EnumMap<>(SeerReturnEnum.class);
         ret.put(SeerReturnEnum.RESULT, targetFieldValue);
         ret.put(SeerReturnEnum.CATEGORICAL_INPUT_ISNULL_STAT, categoricalInputIsNullStat);
         return ret;
-    }
-
-    private static Map<String, Object> getValueMap(Field field) {
-        Map<String, Object> map = new HashMap<>();
-        Object object = new Object();
-        List<Value> valueList = ((DataField) field).getValues();
-        if (Objects.nonNull(valueList)) {
-            String valueS;
-            for (Value value : valueList) {
-                valueS = value.getValue();
-                if (Objects.nonNull(valueS)) {
-                    map.put(valueS, object);
-                } else {
-                    // log
-                }
-            }
-        }
-        return map;
-    }
-    private static Object filter(Object rawValue) {
-        if (rawValue == null) {
-            // log
-            return null;
-        }
-
-        if (rawValue instanceof Long) {
-            return Double.parseDouble(rawValue.toString());
-        } else if (rawValue instanceof Integer) {
-            return Double.parseDouble(rawValue.toString());
-        }
-        return rawValue;
     }
 
     private static Object filter(InputField inputField, Object rawValue) {
@@ -155,15 +121,5 @@ public class Seer {
             }
         }
         return rawValue;
-    }
-
-    public static Evaluator getEvaluator(){
-        InputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream("/Users/apple/Documents/xd/lightgbm_1017_Double_test.pmml");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return loadPmml(inputStream);
     }
 }

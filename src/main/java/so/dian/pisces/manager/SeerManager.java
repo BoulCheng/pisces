@@ -1,5 +1,6 @@
 package so.dian.pisces.manager;
 
+import com.alibaba.fastjson.JSON;
 import org.dmg.pmml.*;
 import org.jpmml.evaluator.Evaluator;
 import org.jpmml.evaluator.InputField;
@@ -28,7 +29,7 @@ import java.util.concurrent.ForkJoinTask;
  */
 @Service
 public class SeerManager {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private static final Logger log = LoggerFactory.getLogger(SeerManager.class);
 
     private static final Object object = new Object();
     private static final ForkJoinPool forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
@@ -68,7 +69,6 @@ public class SeerManager {
 
             do {
                 forecastDOList = basicDataManager.page(basicDataDTO, recursiveTaskEnum);
-    //            SeerRecursiveTask seerRecursiveTask = new SeerRecursiveTask(SeerConfiguration.RECURSIVE_DEPTH_ZERO, 0, forecastDOList.size(), seerConfiguration, forecastDOList);
                 ForkJoinTask<Long> forkJoinTask = forkJoinPool.submit(seerConfiguration.initRecursiveTask(recursiveTaskEnum, forecastDOList));
 
                 if (forkJoinTask.isCompletedAbnormally()) {
@@ -113,7 +113,7 @@ public class SeerManager {
                 if (Objects.nonNull(valueS)) {
                     map.put(valueS, object);
                 } else {
-                    // log
+                    log.error("getValueMap error, field:{}", JSON.toJSONString(field));
                 }
             }
         }

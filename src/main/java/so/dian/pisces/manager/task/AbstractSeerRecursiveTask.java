@@ -10,7 +10,6 @@ import so.dian.pisces.domain.ForecastShopDayDO;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RecursiveTask;
 
 /**
@@ -64,7 +63,8 @@ public abstract class AbstractSeerRecursiveTask<T> extends RecursiveTask<Long> {
         for (int i = this.begin; i < this.end; i++) {
             forecastDO = this.forecastDOList.get(i);
             Field[] fields = forecastDO.getClass().getDeclaredFields();
-            Map<String, Object> map = new ConcurrentHashMap<>();
+            Map<String, Object> map = new HashMap<>();
+            EnumMap<Seer.SeerReturnEnum, Object> result;
             try {
                 for (Field field : fields) {
                     field.setAccessible(true);
@@ -72,17 +72,11 @@ public abstract class AbstractSeerRecursiveTask<T> extends RecursiveTask<Long> {
                         map.put(field.getName(), field.get(forecastDO));
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            EnumMap<Seer.SeerReturnEnum, Object> result;
-            try {
                 result = Seer.predict(evaluator, map, seerConfiguration);
             } catch (Exception e) {
                 result = new EnumMap<>(Seer.SeerReturnEnum.class);
                 result.put(Seer.SeerReturnEnum.EXCEPTION, Boolean.TRUE);
-                e.printStackTrace();
+                log.error("SeerJob>>>predict error ", e);
             }
 
             list.add(generateDo(result, forecastDO));
@@ -91,8 +85,7 @@ public abstract class AbstractSeerRecursiveTask<T> extends RecursiveTask<Long> {
                     batchInsert(list);
                     list.clear();
                 } catch (Exception e) {
-                    // log
-                    e.printStackTrace();
+                    log.error("SeerJob>>>batchInsert error ", e);
                 }
             }
         }

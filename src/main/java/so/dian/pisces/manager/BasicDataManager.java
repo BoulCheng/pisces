@@ -28,8 +28,7 @@ public class BasicDataManager {
         if (recursiveTaskEnum.isFuture()) {
             return pageFuture(basicDataDTO);
         }
-        // error log
-        return null;
+        throw new IllegalArgumentException("recursiveTaskEnum is illegal!");
     }
 
     public Long count(BasicDataDTO basicDataDTO, SeerConfiguration.RecursiveTaskEnum recursiveTaskEnum) {
@@ -40,8 +39,7 @@ public class BasicDataManager {
         if (recursiveTaskEnum.isFuture()) {
             return countFuture(basicDataDTO);
         }
-        // error log
-        return null;
+        throw new IllegalArgumentException("recursiveTaskEnum is illegal!");
     }
 
     public List<ForecastShopDayDO> pagePast(BasicDataDTO basicDataDTO) {

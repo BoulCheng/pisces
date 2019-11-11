@@ -1,6 +1,8 @@
 package so.dian.pisces.config;
 
 import org.jpmml.evaluator.Evaluator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import so.dian.pisces.common.seer.Seer;
 import so.dian.pisces.common.util.FileUtil;
 import so.dian.pisces.domain.ForecastShopDayDO;
@@ -23,6 +25,8 @@ import java.util.concurrent.RecursiveTask;
  * Description
  */
 public final class SeerConfiguration {
+    private static Logger log = LoggerFactory.getLogger(FileUtil.class);
+
     private static final Integer DEFAULT_EVALUATOR_COUNT = 1 << 2;
     private static final Integer MAXIMUM_EVALUATOR_COUNT = 1 << 5;
     public static final Integer RECURSIVE_DEPTH_ZERO = 0;
@@ -55,7 +59,7 @@ public final class SeerConfiguration {
     public Evaluator getNextEvaluator() {
         Evaluator evaluator = arrayBlockingQueue.poll();
         if (evaluator == null) {
-            // warn log
+            log.error("evaluator is null!");
             return Seer.loadPmml(FileUtil.getFileInputStream(this.recursiveTaskEnum));
         } else {
             return evaluator;
@@ -65,7 +69,7 @@ public final class SeerConfiguration {
     public Evaluator peekEvaluator() {
         Evaluator evaluator = arrayBlockingQueue.peek();
         if (evaluator == null) {
-            // warn log
+            log.error("evaluator is null!");
             return Seer.loadPmml(FileUtil.getFileInputStream(this.recursiveTaskEnum));
         } else {
             return evaluator;
