@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 public class MysqlDataSourceConfiguration {
 
     @Bean(name = "mysqlDatasource")
-    @ConfigurationProperties(prefix = "druid.datasource.mysql")
+    @ConfigurationProperties(prefix = "druid.datasource.dx2")
     @Primary
     public DataSource mysqlDataSource() {
         return DruidDataSourceBuilder.create().build();
