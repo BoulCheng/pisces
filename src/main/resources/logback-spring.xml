@@ -177,6 +177,12 @@
 <!--    <appender-ref ref="CONSOLE"/>-->
 <!--  </logger>-->
 
+  <!--不打印WARN级别以下日志 并传递给root打印-->
+  <logger name="com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver" level="WARN" additivity="true">
+  </logger>
+  <logger name="org.springframework.cloud.config.client.ConfigServicePropertySourceLocator" level="WARN" additivity="true">
+  </logger>
+
   <!--JMX管理 Spring Boot Admin-->
   <jmxConfigurator/>
 </configuration>
